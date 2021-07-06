@@ -66,3 +66,10 @@ if (! function_exists('areActiveRoutesHome')) {
     }
     
 }
+
+if (! function_exists('storedAsset')) {
+    function storedAsset($path)
+    {
+        return url("/storage/app/$path");
+    }
+}

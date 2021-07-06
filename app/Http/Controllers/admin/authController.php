@@ -22,8 +22,6 @@ class authController extends Controller
             'email' => 'required',
             'pasword' => 'required',
         ];
-        
-        // dd($request->all());
         // $this->validate($request,$validation);
         
 
@@ -33,7 +31,12 @@ class authController extends Controller
             Hash::check($request->password, $user->password)) {
             $remember = $request->has('remember') ? true :false;
             $credentials = $user->only('email', 'password');
-            Auth::login($user,$remember);
+            // dd('crot');
+            try {
+                Auth::login($user,$remember);
+            } catch (Exception $e) {
+                dd($e);
+            }
             
             return redirect()->route('admin.dashboard');
             

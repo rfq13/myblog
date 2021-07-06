@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use App\Models\Post;
 
 class PostController extends Controller
@@ -24,7 +25,7 @@ class PostController extends Controller
      */
     public function create(Request $request)
     {
-        dd([$request->all(),$request->hasFile('thumbnail')]);
+        
     }
 
     /**
@@ -35,7 +36,18 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->all());
+        $post = new Post;
+        $post->title = $request->title;
+        $post->content = $request->content;
+        $post->category = $request->category;
+        $post->thumbnail = $request->thumbnail->store('images/post/thumbnail');
+        $post->slug = Str::slug($request->title);
+        if ($post->save()) {
+            return response()->json([
+                'messages'=>'success'
+            ],200);
+        }
     }
 
     /**
@@ -44,9 +56,16 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$slug)
     {
-        //
+        $post = Post::where(['slug'=>$slug])->first();
+        if ($post) {
+            return view('blogs.detail',compact('post'));
+        }
+
+        flash('blog tidak ditemukan!')->warning();
+
+        return redirect(route('blogs'));
     }
 
     /**
@@ -57,7 +76,10 @@ class PostController extends Controller
      */
     public function edit($id)
     {
-        //
+        if ($post = Post::find(decrypt($id))) {
+            return view('admin.post.write',compact('post'));
+        }
+        return back();
     }
 
     /**
@@ -69,7 +91,39 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $post = Post::find(decrypt($id));
+        
+        if ($post) {
+            $path = str_replace('public','storage/app',public_path())."/$post->thumbnail";
+
+            $post->title = $request->title;
+            $post->content = $request->content;
+            $post->category = $request->category;
+            $post->slug = Str::slug($request->title);
+            
+            if ($request->hasFile('thumbnail')) {
+                $post->thumbnail = $request->thumbnail->store('images/post/thumbnail');
+                if (file_exists($path)) {
+                    unlink($path);
+                }
+            }
+
+
+
+
+            if ($post->save()) {
+                return response()->json([
+                    'messages'=>'success'
+                ],200);
+            }
+        }
+
+        return response()->json([
+            'title'=>$request->has('title'),
+            'all'=>$request->all(),
+            'hasfile'=>$request->hasFile('thumbnail')
+        ],500);
+
     }
 
     /**
@@ -80,13 +134,28 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        
     }
 
     public function all()
     {
         return response()->json([
-            "data"=>Post::all()
+            "data"=>Post::orderby('created_at','desc')->get()
         ],200);
+    }
+
+    public function updateVisibility(Request $request)
+    {
+        if($post = Post::find($request->id)){ 
+            $post->show = $request->show == "true" ? 1:0;
+            $post->save();
+
+            return response()->json([
+                "message"=>"success"
+            ],200);
+        }
+        return response()->json([
+            "message"=>"post not found"
+        ],404);
     }
 }

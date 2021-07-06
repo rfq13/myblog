@@ -1,7 +1,8 @@
 <?php
 
 use App\Models\User;
-// use Auth;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 if (! function_exists('areActiveRoutesHome')) {
     function areActiveRoutesHome(Array $routes, $output = "active")

@@ -17,7 +17,7 @@
   <meta content="" name="keywords">
 
   <!-- Favicons -->
-  <link href="assets/img/favicon.png" rel="icon">
+  <link href="{{ asset('public/assets/img/favicon.png') }}" rel="icon">
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Google Fonts -->
@@ -59,7 +59,7 @@
           <li><a href="#services">Services</a></li>
           <li><a href="#portfolio">Portfolio</a></li>
           <li><a href="#team">Team</a></li>
-		  <li><a href="blog.html">Blog</a></li>
+		  <li><a href="{{ route('blogs') }}">Blog</a></li>
 		@auth
 		<li class="drop-down"><a href="">Account</a>
 		  <ul>
@@ -806,16 +806,14 @@
   <script src="{{ asset('public/assets/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
   <script src="{{ asset('public/assets/vendor/venobox/venobox.min.js') }}"></script>
   <script src="{{ asset('public/assets/vendor/owl.carousel/owl.carousel.min.js') }}"></script>
-
   <!-- Template Main JS File -->
   <script src="{{ asset('public/assets/js/main.js') }}"></script>
 
-  <script src="{{ asset('public/js/app.js') }}"></script>
+  <script src="{{ asset('js/app.js') }}"></script>
   <script>
-    Echo.channel('home')
-    .listen('NewMessage', (e) => {
-      console.log(e.message);
-    })
+    window.Echo.channel("home").listen("NewMessage", (e) => {
+      console.log(e, "luarbianto");
+    });
   </script>
 </body>
 

@@ -30,20 +30,26 @@ Route::prefix('admin')->group(function () {
     Route::middleware(['isAdmin','auth'])->group(function ()
     {
        Route::view('/dashboard', 'admin.dashboard')->name('admin.dashboard');
-       Route::view('/write', 'admin.write')->name('admin.write');
+
+       Route::prefix('posts')->group(function ()
+       {
+           Route::view('/', 'admin.post.list')->name('post.list');
+           Route::view('/write', 'admin.post.write')->name('post.write');
+           Route::get('/all',[App\Http\Controllers\PostController::class, 'all'])->name('all.post');
+           Route::post('/store',[App\Http\Controllers\PostController::class, 'store'])->name('store.post');
+           Route::post('/updateVisibility',[App\Http\Controllers\PostController::class, 'updateVisibility'])->name('updateVisibility.post');
+           Route::get('/edit/{id}',[App\Http\Controllers\PostController::class, 'edit'])->name('edit.post');
+           Route::post('/{id}',[App\Http\Controllers\PostController::class, 'update'])->name('update.post');
+       });
+
     });
+
 });
 
 
-Route::view('/', 'welcome');
+Route::view('/', 'welcome')->name('home');
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-
-Route::prefix('posts')->group(function ()
-{
-    Route::get('/all',[App\Http\Controllers\PostController::class, 'all'])->name('all.post');
-    Route::post('/create',[App\Http\Controllers\PostController::class, 'create'])->name('create.post');
-});
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 Route::prefix('storage')->group(function ()
 {
@@ -51,17 +57,19 @@ Route::prefix('storage')->group(function ()
     Route::post('remove-storage-handle',[App\Http\Controllers\StorageController::class, 'destroy'])->name('destroy.file');
 });
 
-Route::prefix('blogs')->group(function ()
-{
-    Route::view('/', 'blogs.index')->name('blogs');
-});
-
 Route::resource('categories',App\Http\Controllers\CategoryController::class);
+Route::view('home', 'blogs.index')->name('blogs');
+Route::get('{slug}',[App\Http\Controllers\PostController::class, 'show'])->name('blog.detail');
+// Route::prefix('')->group(function ()
+// {
+// });
+
 
 Route::get('message', function ()
 {
     $message['user'] = 'Rifqy';
     $message['message'] = 'test message';
-    $success = event(new App\Events\NewMessage($message));
-    return $success;
+    event(new App\Events\NewMessage($message));
+
+    return "kuntilaman";
 });

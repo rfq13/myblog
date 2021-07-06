@@ -37,23 +37,23 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Setting:</h6>
-                <a class="collapse-item" href="{{ route('admin.write') }}">Write</a>
+                <a class="collapse-item" href="{{ route('post.write') }}">Write</a>
+                <a class="collapse-item" href="{{ route('post.list') }}">List</a>
             </div>
         </div>
     </li>
     <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseCtg"
-            aria-expanded="true" aria-controls="collapseCtg">
+        <a class="nav-link" href="{{ route('categories.create') }}" aria-expanded="true">
             <i class="fas fa-list"></i>
             <span>Categories</span>
         </a>
-        <div id="collapseCtg" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+        {{-- <div id="collapseCtg" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <h6 class="collapse-header">Setting:</h6>
-                <a class="collapse-item" href="{{ route('categories.create') }}">Create</a>
+                <a class="collapse-item" href="">Create</a>
                 <a class="collapse-item" href="cards.html">Lists</a>
             </div>
-        </div>
+        </div> --}}
     </li>
 
     <!-- Nav Item - Utilities Collapse Menu -->

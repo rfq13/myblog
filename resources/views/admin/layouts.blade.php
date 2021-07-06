@@ -8,8 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ env('APP_NAME') }} - Admin @yield('title')</title>
+
 
     <!-- Custom fonts for this template-->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
@@ -19,27 +22,38 @@
 
     <!-- Custom styles for this template-->
     <link href="{{ asset('css/sbadmin/sb-admin-2.min.css') }}" rel="stylesheet">
-
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     @yield('style')
 
 </head>
 
 <body id="page-top">
-<input type="hidden" id="base_url" value="{{ url("") }}">
-<input type="hidden" id="csrf_token" value="{{ csrf_token() }}">
-    <!-- Page Wrapper -->
-    <div id="wrapper">
+    <input type="hidden" id="base_url" value="{{ url("") }}">
+    <input type="hidden" id="csrf_token" value="{{ csrf_token() }}">
+<!-- Page Wrapper -->
+<div id="wrapper">
+    <div style="z-index: 3; position:fixed;width:50%;right:0;padding-top:2px">
+        <div class="alert alert-success alert-dismissible" style="display: none" id="alertmy">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>Holy guacamole!</strong> You should check in on some of those fields below.
+        </div>
+    </div>
+    
 
         @include('admin.sidebar')
 
         <!-- Content Wrapper -->
         <div id="content-wrapper" class="d-flex flex-column">
-
             <!-- Main Content -->
             <div id="content">
-
+                
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+                    <a href="#" class="btn btn-primary" id="ngehe">ngehe</a>
                     <!-- Sidebar Toggle (Topbar) -->
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
@@ -47,9 +61,9 @@
 
                     <!-- Topbar Search -->
                     <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search" id="formparentSearch">
                         <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
+                            <input type="text" id="parentSearch" class="form-control bg-light border-0 small" placeholder="Search for..."
                                 aria-label="Search" aria-describedby="basic-addon2">
                             <div class="input-group-append">
                                 <button class="btn btn-primary" type="button">
@@ -307,9 +321,39 @@
     <!-- Page level plugins -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.bundle.min.js"></script>
 
+    <!-- Bootstrap select -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    
     <!-- Axios -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/notify/0.4.2/notify.min.js" integrity="sha512-efUTj3HdSPwWJ9gjfGR71X9cvsrthIA78/Fvd/IN+fttQVy7XWkOAXb295j8B3cmm/kFKVxjiNYzKw9IQJHIuQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script src="{{ asset('public/assets/vendor/notify.min.js') }}"></script>
+    <script>
+        @foreach (session('flash_notification', collect())->toArray() as $message)
+          notification("{{ $message['message'] }}", "{{ $message['level'] }}");
+        @endforeach
+  
+        function notification(message,type) {
+            type = type == 'danger' ? 'error' : type;
+            type = type == 'warning' ? 'warn' : type;
+            $.notify(message, { className: type });
+        }
+    </script>
+
+    <script>
+        
+
+        $(document).ready(function () {
+            $("#ngehe").click(function (e) {
+                e.preventDefault()
+                $("#alertmy").fadeIn();
+            })
+        })
+    </script>
     @stack('script')
 </body>
 

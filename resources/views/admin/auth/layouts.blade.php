@@ -39,7 +39,18 @@
 
     <!-- Custom scripts for all pages-->
     <script src="{{ asset('public/js/sbadmin/sb-admin-2.min.js') }}"></script>
-
+    <script src="{{ asset('public/assets/vendor/notify.min.js') }}"></script>
+    <script>
+        @foreach (session('flash_notification', collect())->toArray() as $message)
+          notification("{{ $message['message'] }}", "{{ $message['level'] }}");
+        @endforeach
+  
+        function notification(message,type) {
+            type = type == 'danger' ? 'error' : type;
+            type = type == 'warning' ? 'warn' : type;
+            $.notify(message, { className: type });
+        }
+    </script>
 </body>
 
 </html>

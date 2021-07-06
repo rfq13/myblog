@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Pagination\LengthAwarePaginator;
 use App\Models\Category;
+
 class CategoryController extends Controller
 {
     /**
@@ -13,7 +17,11 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        return response()->json(Category::all(),200);
+        // dd(Category::get());
+        $ctg = Category::all()->sortByDesc("modified")->values()->all();
+        $data = $this->paginate($ctg,10);
+
+        return response()->json($data,200);
     }
 
     /**
@@ -34,12 +42,28 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        $data = $request->except('_token');
+        $messages = [
+            'required' => ' :attribute harus diisi',
+            'string'    => ' :attribute harus berformat teks',
+            'file'    => ' :attribute harus berformat file',
+            'mimes' => 'format :attribute harus jpg,jpeg,png',
+            'max'      => 'ukuran file :attribute maksimal :max MB',
+        ];
+
+        $request->validate([
+            'name' => 'required|',
+            'icon' => 'required|file|max:1000|mimes:jpg,jpeg,png'
+        ],$messages);
+
+
         $return = [
             'message' => 'failed',
         ];
         $stts = 500;
-        if(Catgeory::insert($data)){
+        $category = new Category;
+        $category->name = $request->name;
+        $category->icon = $request->icon->store('images/category/icon');
+        if($category->save()){
             $return['message'] = 'success';
             $stts = 200;
         }
@@ -90,5 +114,11 @@ class CategoryController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function paginate($items, $perPage = 15, $page = null, $options = [])
+    {
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+        return new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 }

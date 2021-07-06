@@ -1,3 +1,7 @@
+@php
+    $gs = \App\Models\GeneralSetting::first();
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,9 +9,35 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
 
-  <title>Blog - Tempo Bootstrap Template</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
+  <title>{{ env('APP_NAME') }} @yield('title')</title>
+
+  @if (!isset($post))
+  <meta content="{{ $gs->description }}" name="description">
+  <meta content="{{ env('APP_NAME') }}" name="keywords">
+
+  <!-- Schema.org markup for Google+ -->
+  <meta itemprop="name" content="{{ config('app.name', 'Laravel') }}">
+  <meta itemprop="description" content="{{ $gs->description }}">
+  <meta itemprop="image" content="{{ storedAsset($gs->logo) }}">
+
+  <!-- Twitter Card data -->
+  <meta name="twitter:card" content="product">
+  <meta name="twitter:site" content="@publisher_handle">
+  <meta name="twitter:title" content="{{ config('app.name', 'Laravel') }}">
+  <meta name="twitter:description" content="{{ $gs->description }}">
+  <meta name="twitter:creator" content="@author_handle">
+  <meta name="twitter:image" content="{{ storedAsset($gs->logo) }}">
+
+  <!-- Open Graph data -->
+  <meta property="og:title" content="{{ config('app.name', 'Laravel') }}"/>
+  <meta property="og:type" content="Blog Site"/>
+  <meta property="og:url" content="{{ route('home') }}"/>
+  <meta property="og:image" content="{{ storedAsset($gs->logo) }}"/>
+  <meta property="og:description" content="{{ $gs->description }}"/>
+  <meta property="og:site_name" content="{{ env('APP_NAME') }}"/>
+  @endif
+
+  @yield('meta')
 
   <!-- Favicons -->
   <link href="{{ asset('public/assets/img/favicon.png') }}" rel="icon">
@@ -23,6 +53,8 @@
   <link href="{{ asset('public/assets/vendor/remixicon/remixicon.css') }}" rel="stylesheet">
   <link href="{{ asset('public/assets/vendor/venobox/venobox.css') }}" rel="stylesheet">
   <link href="{{ asset('public/assets/vendor/owl.carousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 
   <!-- Template Main CSS File -->
   <link href="{{ asset('public/assets/css/style.css') }}" rel="stylesheet">
@@ -42,17 +74,15 @@
     <div class="container d-flex align-items-center">
 
       <h1 class="logo mr-auto"><a href="index.html">Tempo</a></h1>
-      <!-- Uncomment below if you prefer to use an image logo -->
-      <!-- <a href="index.html" class="logo mr-auto"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
 
       <nav class="nav-menu d-none d-lg-block">
         <ul>
-          <li><a href="index.html">Home</a></li>
+          <li><a href="{{ url('/') }}">Home</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#services">Services</a></li>
           <li><a href="#portfolio">Portfolio</a></li>
           <li><a href="#team">Team</a></li>
-          <li class="active"><a href="blog.html">Blog</a></li>
+          <li class="active"><a href="{{ route('blogs') }}">Blog</a></li>
           <li class="drop-down"><a href="">Drop Down</a>
             <ul>
               <li><a href="#">Drop Down 1</a></li>
@@ -85,308 +115,106 @@
       <div class="container">
 
         <ol>
-          <li><a href="index.html">Home</a></li>
-          <li>Blog</li>
+          <li><a href="{{ url('/') }}" style="color: #444444">Home</a></li>
+          @yield('maps')
         </ol>
         <h2>Blog</h2>
 
       </div>
-    </section><!-- End Breadcrumbs -->
-
-    {{-- <!-- ======= Blog Section ======= -->
+    </section>
+    <!-- End Breadcrumbs -->
     <section id="blog" class="blog">
-      <div class="container">
+        <div class="container">
+          <div class="row">
+            @yield('content')
 
-        <div class="row">
 
-          <div class="col-lg-8 entries">
+            <div class="col-lg-4">
 
-            <div class="row">
-
-              <div class="col-md-6 d-flex align-items-stretch">
-                <article class="entry">
-
-                  <div class="entry-img">
-                    <img src="assets/img/blog-1.jpg" alt="" class="img-fluid">
-                  </div>
-
-                  <h2 class="entry-title">
-                    <a href="blog-single.html">Dolorum optio tempore voluptas dignissimos cumque fuga qui quibusdam quia</a>
-                  </h2>
-
-                  <div class="entry-meta">
-                    <ul>
-                      <li class="d-flex align-items-center"><i class="icofont-user"></i> <a href="blog-single.html">John Doe</a></li>
-                      <li class="d-flex align-items-center"><i class="icofont-wall-clock"></i> <a href="blog-single.html"><time datetime="2020-01-01">Jan 1, 2020</time></a></li>
-                    </ul>
-                  </div>
-
-                  <div class="entry-content">
-                    <p>
-                      Similique neque nam consequuntur ad non maxime aliquam quas. Quibusdam animi praesentium. Aliquam et laboriosam eius aut nostrum quidem aliquid dicta zena prista maraeda talan mas indera.
-                    </p>
-                    <div class="read-more">
-                      <a href="blog-single.html">Read More</a>
-                    </div>
-                  </div>
-
-                </article><!-- End blog entry -->
-              </div>
-
-              <div class="col-md-6 d-flex align-items-stretch">
-                <article class="entry">
-
-                  <div class="entry-img">
-                    <img src="assets/img/blog-2.jpg" alt="" class="img-fluid">
-                  </div>
-
-                  <h2 class="entry-title">
-                    <a href="blog-single.html">Nisi magni odit consequatur autem nulla dolorem</a>
-                  </h2>
-
-                  <div class="entry-meta">
-                    <ul>
-                      <li class="d-flex align-items-center"><i class="icofont-user"></i> <a href="blog-single.html">John Doe</a></li>
-                      <li class="d-flex align-items-center"><i class="icofont-wall-clock"></i> <a href="blog-single.html"><time datetime="2020-01-01">Jan 1, 2020</time></a></li>
-                    </ul>
-                  </div>
-
-                  <div class="entry-content">
-                    <p>
-                      Ad impedit qui officiis est in non aliquid veniam laborum. Id ipsum qui aut. Sit aliquam et quia molestias laboriosam. Tempora nam odit omnis eum corrupti qui aliquid excepturi molestiae. Facilis et sint quos sed voluptas. Maxime sed tempore enim omnis non alias.
-                    </p>
-                    <div class="read-more">
-                      <a href="blog-single.html">Read More</a>
-                    </div>
-                  </div>
-
-                </article><!-- End blog entry -->
-              </div>
-
-              <div class="col-md-6 d-flex align-items-stretch">
-                <article class="entry">
-
-                  <div class="entry-img">
-                    <img src="assets/img/blog-3.jpg" alt="" class="img-fluid">
-                  </div>
-
-                  <h2 class="entry-title">
-                    <a href="blog-single.html">Possimus soluta ut id suscipit ea ut. In quo quia et soluta libero sit sint.</a>
-                  </h2>
-
-                  <div class="entry-meta">
-                    <ul>
-                      <li class="d-flex align-items-center"><i class="icofont-user"></i> <a href="blog-single.html">John Doe</a></li>
-                      <li class="d-flex align-items-center"><i class="icofont-wall-clock"></i> <a href="blog-single.html"><time datetime="2020-01-01">Jan 1, 2020</time></a></li>
-                    </ul>
-                  </div>
-
-                  <div class="entry-content">
-                    <p>
-                      Aut iste neque ut illum qui perspiciatis similique recusandae non. Fugit autem dolorem labore omnis et. Eum temporibus fugiat voluptate enim tenetur sunt omnis tara kero pakla metaruna nedore stan.
-                    </p>
-                    <div class="read-more">
-                      <a href="blog-single.html">Read More</a>
-                    </div>
-                  </div>
-
-                </article><!-- End blog entry -->
-              </div>
-
-              <div class="col-md-6 d-flex align-items-stretch">
-                <article class="entry">
-
-                  <div class="entry-img">
-                    <img src="assets/img/blog-4.jpg" alt="" class="img-fluid">
-                  </div>
-
-                  <h2 class="entry-title">
-                    <a href="blog-single.html">Non rem rerum nam cum quo minus. Dolor distinctio deleniti explicabo eius exercitationem.</a>
-                  </h2>
-
-                  <div class="entry-meta">
-                    <ul>
-                      <li class="d-flex align-items-center"><i class="icofont-user"></i> <a href="blog-single.html">John Doe</a></li>
-                      <li class="d-flex align-items-center"><i class="icofont-wall-clock"></i> <a href="blog-single.html"><time datetime="2020-01-01">Jan 1, 2020</time></a></li>
-                    </ul>
-                  </div>
-
-                  <div class="entry-content">
-                    <p>
-                      Aspernatur rerum perferendis et sint. Voluptates cupiditate voluptas atque quae. Rem veritatis rerum enim et autem. Saepe atque cum eligendi eaque iste omnis a qui.
-                    </p>
-                    <div class="read-more">
-                      <a href="blog-single.html">Read More</a>
-                    </div>
-                  </div>
-
-                </article><!-- End blog entry -->
-              </div>
-
-              <div class="col-md-6 d-flex align-items-stretch">
-                <article class="entry">
-
-                  <div class="entry-img">
-                    <img src="assets/img/blog-5.jpg" alt="" class="img-fluid">
-                  </div>
-
-                  <h2 class="entry-title">
-                    <a href="blog-single.html">Blanditiis dignissimos deleniti. Rerum iste et.</a>
-                  </h2>
-
-                  <div class="entry-meta">
-                    <ul>
-                      <li class="d-flex align-items-center"><i class="icofont-user"></i> <a href="blog-single.html">John Doe</a></li>
-                      <li class="d-flex align-items-center"><i class="icofont-wall-clock"></i> <a href="blog-single.html"><time datetime="2020-01-01">Jan 1, 2020</time></a></li>
-                    </ul>
-                  </div>
-
-                  <div class="entry-content">
-                    <p>
-                      Quidem et eum explicabo quia illo numquam nostrum corrupti provident. Quia aspernatur et et facere. Quisquam maiores natus nihil incidunt ipsum est optio eum maxime. Dignissimos vitae explicabo. Corrupti esse sed a a. Laborum optio reprehenderit quia dena per.
-                    </p>
-                    <div class="read-more">
-                      <a href="blog-single.html">Read More</a>
-                    </div>
-                  </div>
-
-                </article><!-- End blog entry -->
-              </div>
-
-              <div class="col-md-6 d-flex align-items-stretch">
-                <article class="entry">
-
-                  <div class="entry-img">
-                    <img src="assets/img/blog-6.jpg" alt="" class="img-fluid">
-                  </div>
-
-                  <h2 class="entry-title">
-                    <a href="blog-single.html">Debitis cupiditate saepe ex quam aut id. Consequatur dignissimos et id id.</a>
-                  </h2>
-
-                  <div class="entry-meta">
-                    <ul>
-                      <li class="d-flex align-items-center"><i class="icofont-user"></i> <a href="blog-single.html">John Doe</a></li>
-                      <li class="d-flex align-items-center"><i class="icofont-wall-clock"></i> <a href="blog-single.html"><time datetime="2020-01-01">Jan 1, 2020</time></a></li>
-                    </ul>
-                  </div>
-
-                  <div class="entry-content">
-                    <p>
-                      Modi dolor et placeat ut iure ad. Qui perferendis fugit quo et cumque facilis et debitis rerum. Repellendus animi qui eos. Unde perferendis et tempora Ratione porro omnis magn delata sera marto ned.
-                    </p>
-                    <div class="read-more">
-                      <a href="blog-single.html">Read More</a>
-                    </div>
-                  </div>
-
-                </article><!-- End blog entry -->
-              </div>
-
-            </div>
-
-            <div class="blog-pagination">
-              <ul class="justify-content-center">
-                <li class="disabled"><i class="icofont-rounded-left"></i></li>
-                <li><a href="#">1</a></li>
-                <li class="active"><a href="#">2</a></li>
-                <li><a href="#">3</a></li>
-                <li><a href="#"><i class="icofont-rounded-right"></i></a></li>
-              </ul>
-            </div>
-
-          </div><!-- End blog entries list -->
-
-          <div class="col-lg-4">
-
-            <div class="sidebar">
-
-              <h3 class="sidebar-title">Search</h3>
-              <div class="sidebar-item search-form">
-                <form action="">
-                  <input type="text">
-                  <button type="submit"><i class="icofont-search"></i></button>
-                </form>
-
-              </div><!-- End sidebar search formn-->
-
-              <h3 class="sidebar-title">Categories</h3>
-              <div class="sidebar-item categories">
-                <ul>
-                  <li><a href="#">General <span>(25)</span></a></li>
-                  <li><a href="#">Lifestyle <span>(12)</span></a></li>
-                  <li><a href="#">Travel <span>(5)</span></a></li>
-                  <li><a href="#">Design <span>(22)</span></a></li>
-                  <li><a href="#">Creative <span>(8)</span></a></li>
-                  <li><a href="#">Educaion <span>(14)</span></a></li>
-                </ul>
-
-              </div><!-- End sidebar categories-->
-
-              <h3 class="sidebar-title">Recent Posts</h3>
-              <div class="sidebar-item recent-posts">
-                <div class="post-item clearfix">
-                  <img src="assets/img/blog-recent-1.jpg" alt="">
-                  <h4><a href="blog-single.html">Nihil blanditiis at in nihil autem</a></h4>
-                  <time datetime="2020-01-01">Jan 1, 2020</time>
-                </div>
-
-                <div class="post-item clearfix">
-                  <img src="assets/img/blog-recent-2.jpg" alt="">
-                  <h4><a href="blog-single.html">Quidem autem et impedit</a></h4>
-                  <time datetime="2020-01-01">Jan 1, 2020</time>
-                </div>
-
-                <div class="post-item clearfix">
-                  <img src="assets/img/blog-recent-3.jpg" alt="">
-                  <h4><a href="blog-single.html">Id quia et et ut maxime similique occaecati ut</a></h4>
-                  <time datetime="2020-01-01">Jan 1, 2020</time>
-                </div>
-
-                <div class="post-item clearfix">
-                  <img src="assets/img/blog-recent-4.jpg" alt="">
-                  <h4><a href="blog-single.html">Laborum corporis quo dara net para</a></h4>
-                  <time datetime="2020-01-01">Jan 1, 2020</time>
-                </div>
-
-                <div class="post-item clearfix">
-                  <img src="assets/img/blog-recent-5.jpg" alt="">
-                  <h4><a href="blog-single.html">Et dolores corrupti quae illo quod dolor</a></h4>
-                  <time datetime="2020-01-01">Jan 1, 2020</time>
-                </div>
-
-              </div><!-- End sidebar recent posts-->
-
-              <h3 class="sidebar-title">Tags</h3>
-              <div class="sidebar-item tags">
-                <ul>
-                  <li><a href="#">App</a></li>
-                  <li><a href="#">IT</a></li>
-                  <li><a href="#">Business</a></li>
-                  <li><a href="#">Business</a></li>
-                  <li><a href="#">Mac</a></li>
-                  <li><a href="#">Design</a></li>
-                  <li><a href="#">Office</a></li>
-                  <li><a href="#">Creative</a></li>
-                  <li><a href="#">Studio</a></li>
-                  <li><a href="#">Smart</a></li>
-                  <li><a href="#">Tips</a></li>
-                  <li><a href="#">Marketing</a></li>
-                </ul>
-
-              </div><!-- End sidebar tags-->
-
-            </div><!-- End sidebar -->
-
-          </div><!-- End blog sidebar -->
-
-        </div>
-
-      </div>
-    </section><!-- End Blog Section --> --}}
+              <div class="sidebar">
     
-    @yield('content')
-
+                <h3 class="sidebar-title">Search</h3>
+                <div class="sidebar-item search-form">
+                  <form action="">
+                    <input type="text">
+                    <button type="submit"><i class="icofont-search"></i></button>
+                  </form>
+    
+                </div><!-- End sidebar search formn-->
+    
+                <h3 class="sidebar-title">Categories</h3>
+                @php
+                    $categories = \App\Models\Category::with('post')->get();
+                @endphp
+                <div class="sidebar-item categories">
+                  <ul>
+                    @foreach ($categories as $ctg)
+                      <li><a href="#" style="text-transform: uppercase">{{ $ctg->name }} <span>({{ $ctg->post->count() }})</span></a></li>
+                    @endforeach
+                  </ul>
+    
+                </div><!-- End sidebar categories-->
+    
+                <h3 class="sidebar-title">Recent Posts</h3>
+                <div class="sidebar-item recent-posts">
+                  <div class="post-item clearfix">
+                    <img src="{{ asset('public/assets/img/blog-recent-1.jpg') }}" alt="">
+                    <h4><a href="blog-single.html">Nihil blanditiis at in nihil autem</a></h4>
+                    <time datetime="2020-01-01">Jan 1, 2020</time>
+                  </div>
+    
+                  <div class="post-item clearfix">
+                    <img src="{{ asset('public/assets/img/blog-recent-2.jpg') }}" alt="">
+                    <h4><a href="blog-single.html">Quidem autem et impedit</a></h4>
+                    <time datetime="2020-01-01">Jan 1, 2020</time>
+                  </div>
+    
+                  <div class="post-item clearfix">
+                    <img src="{{ asset('public/assets/img/blog-recent-3.jpg') }}" alt="">
+                    <h4><a href="blog-single.html">Id quia et et ut maxime similique occaecati ut</a></h4>
+                    <time datetime="2020-01-01">Jan 1, 2020</time>
+                  </div>
+    
+                  <div class="post-item clearfix">
+                    <img src="{{ asset('public/assets/img/blog-recent-4.jpg') }}" alt="">
+                    <h4><a href="blog-single.html">Laborum corporis quo dara net para</a></h4>
+                    <time datetime="2020-01-01">Jan 1, 2020</time>
+                  </div>
+    
+                  <div class="post-item clearfix">
+                    <img src="{{ asset('public/assets/img/blog-recent-5.jpg') }}" alt="">
+                    <h4><a href="blog-single.html">Et dolores corrupti quae illo quod dolor</a></h4>
+                    <time datetime="2020-01-01">Jan 1, 2020</time>
+                  </div>
+    
+                </div><!-- End sidebar recent posts-->
+    
+                <h3 class="sidebar-title">Tags</h3>
+                <div class="sidebar-item tags">
+                  <ul>
+                    <li><a href="#">App</a></li>
+                    <li><a href="#">IT</a></li>
+                    <li><a href="#">Business</a></li>
+                    <li><a href="#">Business</a></li>
+                    <li><a href="#">Mac</a></li>
+                    <li><a href="#">Design</a></li>
+                    <li><a href="#">Office</a></li>
+                    <li><a href="#">Creative</a></li>
+                    <li><a href="#">Studio</a></li>
+                    <li><a href="#">Smart</a></li>
+                    <li><a href="#">Tips</a></li>
+                    <li><a href="#">Marketing</a></li>
+                  </ul>
+    
+                </div><!-- End sidebar tags-->
+    
+              </div><!-- End sidebar -->
+    
+            </div><!-- End blog sidebar -->
+    
+        </div>
+      </div>
+    </section>
   </main><!-- End #main -->
 
   <!-- ======= Footer ======= -->
@@ -476,9 +304,30 @@
     <script src="{{ asset('public/assets/vendor/isotope-layout/isotope.pkgd.min.js') }}"></script>
     <script src="{{ asset('public/assets/vendor/venobox/venobox.min.js') }}"></script>
     <script src="{{ asset('public/assets/vendor/owl.carousel/owl.carousel.min.js') }}"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    
+    {{-- notify --}}
+    <script src="{{ asset('public/assets/vendor/notify.min.js') }}"></script>
+
+    <script src="{{ asset('public/assets/js/main.js') }}"></script>
+
+    <script>
+      @foreach (session('flash_notification', collect())->toArray() as $message)
+        notification("{{ $message['message'] }}", "{{ $message['level'] }}");
+      @endforeach
+
+      function notification(message,type) {
+          type = type == 'danger' ? 'error' : type;
+          type = type == 'warning' ? 'warn' : type;
+          $.notify(message, { className: type });
+      }
+    </script>
+    
+    @stack('scripts')
+
 
   <!-- Template Main JS File -->
-    <script src="{{ asset('public/assets/js/main.js"') }}></script>
 
 </body>
 

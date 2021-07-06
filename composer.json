@@ -13,12 +13,13 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "laracasts/flash": "^3.2",
         "laravel/fortify": "^1.7",
         "laravel/framework": "^8.12",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.2",
-        "pusher/pusher-php-server": "~3.0",
-        "nesbot/carbon": "^2.42.0"
+        "nesbot/carbon": "^2.42.0",
+        "pusher/pusher-php-server": "~3.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -44,7 +45,7 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         },
-        "files": ["app/Http/Helpers/User.php"]
+        "files": ["app/Http/Helpers/User.php","app/Http/Helpers/Uploads.php"]
     },
     "autoload-dev": {
         "psr-4": {
